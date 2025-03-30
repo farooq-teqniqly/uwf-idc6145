@@ -172,3 +172,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+*.parquet
+java_opts.txt
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+renv/library/
+renv/staging/

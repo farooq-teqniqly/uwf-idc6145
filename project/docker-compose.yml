@@ -1,0 +1,10 @@
+services:
+  spark-jupyter:
+    image: jupyter/pyspark-notebook:latest
+    ports:
+      - "8888:8888"
+      - "4040:4040"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./datasets:/home/jovyan/work/datasets
+    working_dir: /home/jovyan/work
