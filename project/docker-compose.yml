@@ -8,3 +8,36 @@ services:
       - ./notebooks:/home/jovyan/work
       - ./datasets:/home/jovyan/work/datasets
     working_dir: /home/jovyan/work
+    networks:
+      - net
+      
+  postgres:
+    image: postgres:17.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: nyctaxi
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    networks:
+      - net
+
+  nifi:
+    image: apache/nifi:2.3.0
+    ports:
+      - "9443:9443"
+    environment:
+      NIFI_WEB_HTTPS_PORT: 9443
+      SINGLE_USER_CREDENTIALS_USERNAME: nifi
+      SINGLE_USER_CREDENTIALS_PASSWORD: ${NIFI_PASSWORD}
+    volumes:
+      - ./nifi_data:/opt/nifi/nifi-current/data
+      - ./parquet_watch_folder:/data/parquet
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge

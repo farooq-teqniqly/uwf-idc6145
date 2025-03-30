@@ -182,3 +182,4 @@ java_opts.txt
 .Ruserdata
 renv/library/
 renv/staging/
+pg_data/
