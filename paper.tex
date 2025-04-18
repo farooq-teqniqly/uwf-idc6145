@@ -15,9 +15,9 @@
  
 \graphicspath{{images/}}
 
-\title{\vspace{-2cm}STA5176 Class Project}
+\title{\vspace{-2cm}Temporal Congestion Analysis and Predictive Modeling of Ride-Hailing Trips in NYC Using High-Volume FHV Data}
 \author{Farooq Mahmud}
-\date{April 21, 2024}
+\date{April 25, 2025}
 
 \definecolor{backcolor}{rgb}{0.95,0.95,0.92}
 
@@ -31,83 +31,15 @@
 \begin{document}
 
 \maketitle
-\tableofcontents
+
+\section{Abstract}
+This paper explores traffic congestion patterns in New York City by analyzing High-Volume For-Hire Vehicle (FHV) trip records from services like Uber and Lyft. Using data from all 12 months of 2024, we investigate how trip durations and speeds vary by time of day, day of week, and provider. After extensive preprocessing in PySpark, we identify temporal trends and build predictive models in R using linear and logistic regression. The study demonstrates that the dataset size and analysis complexity necessitate big data tools for processing and modeling at scale.
+
 
 \section{Introduction}
-The objective of the class project is to analyze a dataset containing variables related to Alzheimer's Disease mortality\cite{amin2018geographic} using SAS \cite{sasHelpCenter}. The analysis is conducted using various statistical methods learned in class.
-
-\subsection{Variable of interest}
-Each team member selected one variable to serve as the focus of their analysis. In this report, the variable of interest is diabetes. Most of the statistical methods shown in this report will be performed on the diabetes variable. Additional variables will be analyzed in conjunction with the diabetes variable when needed, \textit{e.g} for linear regression.
-
-As a first step, the frequency counts by state were generated (Figure \ref{fig:state-freq}) using the SAS program in Listing \ref{lst:listing-state-freq}. There is data for six states with most of the data belonging to Georgia, Texas, and Virginia. The original dataset contained data for all fifty states. There are 715 total observations in the pared down dataset. 
-
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[scale=0.7]{images/state-freq.png}
-    \caption{Frequency by state}
-    \label{fig:state-freq}
-\end{figure}
-
-\begin{lstlisting}[language=SAS,caption=Frequency by state,captionpos=b,label=lst:listing-state-freq]
-    proc freq data=proj.alz;
-    tables state;
-    run;
-\end{lstlisting}
-
-\subsection{Outliers}
-Detecting outliers is important because it could indicate a problem with the data which can impact subsequent analyses. The program in Listing \ref{lst:outliers} outputs box plots for the diabetes variable, grouped by state.
-
-The box plots in \ref{appendix:boxplots} show that there are outliers in Texas, Virginia, and Washington. While further analysis of the outliers are out of scope for the project, a next step would be to look at these values to ensure that the values did not result from data entry errors.
-
-\begin{lstlisting}[language=SAS,caption=Box plots of the diabetes variable for each state,captionpos=b,label=lst:outliers]
-    proc univariate plot data=proj.alz;
-    by state;
-    var diabetes; run;
-\end{lstlisting}
-
-\section{Statistical Methods}
-The bulk of this report explains the statistical methods used to analyze the diabetes variable using SAS.
-
-\subsection{Significance Level}
-Unless otherwise specified, the level of significance, $\alpha$ is $0.05$.
-
-\subsection{Testing for Normality}
-Many of the statistical techniques used in the project assume that the data follows a normal distribution. Therefore, it is a good idea to verify that assumption. The SAS program in Listing \ref{lst:listing-norm-test} runs the Shapiro-Wilk test and generates a Q-Q plot for the diabetes variable. These items are shown in Table \ref{tab:norm-test}. 
-
-\begin{lstlisting}[language=SAS,caption=SAS progam to test for the normality of the diabetes variable,captionpos=b,label=lst:listing-norm-test]
-    proc univariate plot normal data=proj.alz;
-    var diabetes; 
-    run;
-\end{lstlisting}
-
-\begin{table}[ht]
-    \begin{tabular}{ll}
-         \includegraphics[scale=0.7]{images/shapiro-wilk.png} & \includegraphics[scale=0.5]{images/q-q-plot.png} \\
-    \end{tabular}
-    \caption{Normality test results for the diabetes variable}
-    \label{tab:norm-test}
-\end{table}
-
-\subsubsection{Interpretation} \label{normality-interpretation}
-The $p$-value for the Shapiro-Wilk test is less than $\alpha$. Therefore, the null hypothesis that the data follows a normal distribution is rejected. The lack of normality can be seen in the Q-Q plot in Table \ref{tab:norm-test} in that the plot is more of a "snake" shape than a straight line.
-
-The lack of normality in the diabetes variable, or any other variable, doesn't invalidate the use of the subsequent statistical techniques explained in this report. As there are 715 observations, the Central Limit Theorem allows us to safely assume a normal distribution \cite{Ott_Longnecker_2016}.
-
-\subsection{Correlation}
-The program in Listing \ref{lst:corr} outputs the Pearson correlation coefficients for all variables in the dataset.
-
-\begin{lstlisting}[language=SAS,caption=SAS correlation program,captionpos=b,label=lst:corr]
-    proc corr data=proj.alz;
-    var mental_distress	smoking_rate physical_inactivity diabetes
-    heart_disease cancer fine_pm_2_5 mercury_tpy lead_tpy poverty_percent;
-    run;
-\end{lstlisting}
-
-The table of coefficients are shown in \ref{appendix:corr}.
-
-\subsubsection{Interpretation}
-Looking at the diabetes variable row in the table of correlation coefficients, there seems to be a relatively strong positive correlation between diabetes and smoking as well as diabetes and physical inactivity. 
+Urban traffic congestion continues to be a pervasive problem affecting the efficiency of transportation systems, contributing to environmental concerns, and impacting commuter well-being. In densely populated cities like New York, where ride-hailing services such as Uber and Lyft operate at massive scale, understanding when and where congestion occurs is critical for optimizing urban mobility.
+This project investigates temporal patterns in congestion using High-Volume For-Hire Vehicle (FHV) trip data collected and published by the NYC Taxi and Limousine Commission (TLC). With over 200 million trip records from 2024 alone, the dataset provides a rich source of behavioral and operational insights. The central research question is: How do trip duration and speed, as proxies for congestion, vary across different times of day, days of the week, and ride-hailing providers?
+The objectives of the study are to (1) identify temporal congestion trends through descriptive analysis, and (2) develop regression models to predict trip duration or classify trips as congested based on their features. Given the volume and granularity of the dataset, traditional analysis tools fall short, necessitating the use of big data processing technologies like Apache Spark. This research aims to produce interpretable insights that can inform urban planning, traffic policy, and ride-hailing operations.
 
 \section{Testing for Equal Means (Assuming Normality)}
 
