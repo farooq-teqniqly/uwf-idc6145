@@ -33,7 +33,7 @@
 \maketitle
 
 \section{Abstract}
-This paper explores traffic congestion patterns in New York City by analyzing High-Volume For-Hire Vehicle (FHV) trip records from services like Uber and Lyft. Using data from all 12 months of 2024, we investigate how trip durations and speeds vary by time of day, day of week, and provider. After extensive preprocessing in PySpark, we identify temporal trends and build predictive models in R using linear and logistic regression. The study demonstrates that the dataset size and analysis complexity necessitate big data tools for processing and modeling at scale.
+This paper explores traffic congestion patterns in New York City by analyzing High-Volume For-Hire Vehicle (FHV) trip records from services such as Uber and Lyft. Using data from all 12 months of 2024, we investigate how trip durations and speeds vary by time of day, day of week, and provider. After extensive pre-processing in Apache Spark (PySpark), we identify temporal trends and build predictive models in R using linear and logistic regression. The study demonstrates that the dataset size and analysis complexity necessitate big data tools for processing and modeling at scale.
 
 
 \section{Introduction}
@@ -44,9 +44,27 @@ The objectives of the study are to (1) identify temporal congestion trends throu
 \section{Background Review}
 
 A growing body of research has explored the use of ride-hailing data for understanding urban transportation dynamics. Previous studies have focused on topics such as demand prediction, ride-sharing optimization, pricing strategy, and transportation equity. NYC’s Taxi and Limousine Commission has provided open access to large-scale trip data, which has enabled a range of analyses from temporal ridership patterns to spatial clustering of pick-up and drop-off zones \cite{nyctlc2023}.
-Several works have leveraged this dataset to evaluate ride-hailing’s impact on traffic flow and public transit usage. For example, a study by NYU Tandon found that New York City’s congestion surcharge reduced the number of ride-hailing trips but did not significantly alleviate congestion \cite{nyu2023}. Additionally, research from the CUNY Graduate Center examined the 2019 congestion surcharge’s effects on FHV usage in Manhattan, showing a decline in rides from charged zones \cite{cuny2023}.
+Several works have leveraged this dataset to evaluate ride-hailing’s impact on traffic flow and public transit usage. For example, a study by NYU's Tandon School of Engineering found that New York City’s congestion surcharge reduced the number of ride-hailing trips but did not significantly alleviate congestion \cite{nyu2023}. Additionally, research from the CUNY Graduate Center examined the 2019 congestion surcharge’s effects on FHV usage in Manhattan, showing a decline in rides from charged zones \cite{cuny2023}.
 Other studies have investigated surge pricing’s influence on driver behavior \cite{surgepricing2022} and analyzed pay disparities across platforms using data from 2019 to 2022 \cite{ucla2023}. However, many of these analyses are limited in scope—often examining only a few months of data, focusing exclusively on yellow taxi or green cab datasets, or lacking predictive components.
 There remains a gap in literature concerning sustained, full-year temporal analysis of congestion based specifically on High-Volume FHV data. Furthermore, predictive modeling using such data is less common, particularly models focused on estimating congestion or trip delays. Our project addresses these shortcomings by utilizing a complete 12-month dataset and incorporating regression modeling. Additionally, our use of big data processing tools distinguishes this study from prior work that relies on single-machine or static data approaches.
+
+\section{Method}
+This study follows a multi-phase approach consistent with the big data lifecycle, including data acquisition, pre-processing, analysis, and modeling.
+
+\subsection{Data Acquisition and Setup}
+We obtained the NYC TLC High-Volume FHV trip record dataset for all twelve months of 2024. Each monthly dataset is stored in Parquet format and accessed via Google Drive in a cloud-based Google Colab environment. We used Apache Spark (PySpark) for all data ingestion and transformation steps, given the dataset's scale of over 200 million records.
+
+\subsection{Data Processing}
+In PySpark, we cleaned the data by removing rows with null or invalid values (e.g., zero or negative durations and distances). We then created derived columns for \texttt{trip\_duration\_min}, \texttt{avg\_speed\_mph}, and categorical features like \texttt{pickup\_hour}, \texttt{pickup\_day}, and \texttt{trip\_provider}. Outliers were filtered using interquartile range (IQR) thresholds for trip duration, distance, and speed. These pre-processing steps reduced noise and ensured reliable downstream analysis.
+
+\subsection{Exploratory Analysis}
+Using Spark aggregations, we examined average trip speed and duration by hour of day, day of week, and provider. This analysis helped identify temporal congestion patterns and informed the design of the modeling phase.
+
+\subsection{Predictive Modeling}
+The cleaned dataset was exported to R for statistical modeling. A multiple linear regression model was used to predict trip duration based on features such as trip distance, pickup hour, and provider. A logistic regression model was also developed to classify trips as congested or not, using a threshold on duration (e.g., top 10\% longest trips). Model evaluation included interpretation of coefficients, R-squared for linear regression, and accuracy and confusion matrix metrics for logistic regression.
+
+\subsection{Method Justification and Tools}
+Given the volume and granularity of the dataset, traditional single-machine tools like pandas or base R would not scale. Apache Spark enables efficient, distributed computation across the full dataset. R is used for its strong support of regression modeling and statistical interpretation. Together, these tools enable scalable, interpretable, and reproducible analysis.
 
 \section{Conclusion}
 This study highlights the feasibility and value of using big data tools to analyze ride-hailing trip data for congestion insights. It confirms the need for scalable data processing when working with multi-year FHV datasets and shows that simple predictive models can effectively estimate congestion levels using temporal features. Future work could include incorporating spatial features, extending modeling to multi-year data, or testing real-time streaming analysis.
