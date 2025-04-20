@@ -55,7 +55,7 @@ This study follows a multi-phase approach consistent with the big data lifecycle
 We obtained the NYC TLC High-Volume FHV trip record dataset for all twelve months of 2024. Each monthly dataset is stored in Parquet format and accessed via Google Drive in a cloud-based Google Colab environment. We used Apache Spark (PySpark) for all data ingestion and transformation steps, given the dataset's scale of 239,470,448 records.
 
 \subsection{Data Processing}
-In PySpark, we cleaned the data by removing rows with null or invalid values (e.g., zero or negative durations and distances). We then created derived columns for \texttt{trip\_duration\_min}, \texttt{avg\_speed\_mph}, and categorical features like \texttt{pickup\_hour}, \texttt{pickup\_day}, and \texttt{trip\_provider}. Outliers were filtered using interquartile range (IQR) thresholds for trip duration, distance, and speed. These pre-processing steps reduced noise and ensured reliable downstream analysis. Lastly, columns not needed for the analyses were removed from the dataset. The cleaned dataset contained nine columns compared to 24 in the original dataset.
+In PySpark, we cleaned the data by removing rows with null or invalid values (e.g., zero or negative durations and distances). We then created derived columns for \texttt{trip\_duration\_min}, \texttt{avg\_speed\_mph}, and categorical features like \texttt{pickup\_hour}, \texttt{pickup\_day}, and \texttt{trip\_provider}. Outliers were filtered using interquartile range (IQR) thresholds for trip duration, distance, and speed. These pre-processing steps reduced noise and ensured reliable downstream analysis. Lastly, columns not needed for the analyses were removed from the dataset. The cleaned dataset contained five columns of the 24 in the original dataset (not including the aforementioned derived columns).
 
 \subsection{Exploratory Analysis}
 Using Spark aggregations, we examined average trip speed and duration by hour of day, day of week, and provider. This analysis helped identify temporal congestion patterns and informed the design of the modeling phase.
@@ -69,14 +69,14 @@ Given the volume and granularity of the dataset, traditional single-machine tool
 \section{Results}
 \subsection{Descriptive Statistics and Temporal Trends}
 
-After pre-processing, the dataset contained approximately 204 million valid trip records. Average trip duration was 18.2 minutes with a standard deviation of 12.3 minutes, while average trip distance was 4.8 miles. Filtering removed extreme outliers, such as trips with durations over 120 minutes or speeds exceeding 80 mph.
+After pre-processing, the dataset contained 211,743,856 valid trip records. Average trip duration was 18.2 minutes with a standard deviation of 12.3 minutes, while average trip distance was 4.8 miles. Filtering removed extreme outliers, such as trips with durations over 120 minutes or speeds exceeding 80 mph.
 
-Temporal analysis showed that congestion peaks during weekday morning (7–9 AM) and evening (4–7 PM) hours, with significantly lower average speeds and longer trip durations. Weekends exhibited flatter congestion patterns with slightly shorter average trip times. Among providers, Lyft and Uber represented the majority of trips, and their congestion profiles closely mirrored citywide averages.
+Temporal analysis showed that congestion peaks during weekday morning (7–9 AM) and evening (4–7 PM) hours, with significantly lower average speeds and longer trip durations. Weekends exhibited flatter congestion patterns with slightly shorter average trip times. Among providers, Lyft and Uber represented all trips in the dataset, and their congestion profiles closely mirrored citywide averages.
 
 \subsection{Regression Analysis}
 A multiple linear regression model was developed using trip distance, pickup hour, and provider as predictors of trip duration. The model achieved an R-squared value of 0.62, indicating a moderate fit. All predictors were statistically significant (p < 0.01), with trip distance contributing the most to variance explained.
 
-A logistic regression model classified trips as congested if their duration fell in the top 10% (greater than 37.5 minutes). The model achieved 86% accuracy with a precision of 0.79 and recall of 0.81. Pickup hour and provider were strong predictors, confirming temporal and provider-specific variation in congestion likelihood.
+A logistic regression model classified trips as congested if their duration fell in the top 10\% (greater than 37.5 minutes). The model achieved 86\% accuracy with a precision of 0.79 and recall of 0.81. Pickup hour and provider were strong predictors, confirming temporal and provider-specific variation in congestion likelihood.
 
 These findings support the conclusion that ride-hailing congestion in NYC exhibits strong temporal regularities and that basic trip features can reliably forecast trip performance and congestion risk.
 
