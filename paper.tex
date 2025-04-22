@@ -89,7 +89,7 @@ Security is an essential consideration when designing a big data pipeline that p
 Managing storage efficiently is critical when working with high-volume data such as NYC's FHV trip records, which can span hundreds of millions of rows annually. Choosing the right file formats, such as Parquet, for compression and efficient querying helps reduce I/O overhead and long-term storage costs. Partitioning data by month or provider can further accelerate processing in distributed computing frameworks like Apache Spark. In a production setting, storage solutions, such as Amazon S3, offer scalable and cost-effective options with integrated lifecycle policies to automate data archival or deletion \cite{awsS3}.
 
 \section{Conclusion}
-This proposed study is designed to demonstrate the value of using big data tools to analyze ride-hailing trip data to gain insight into congestion. It anticipates showing that simple predictive models can effectively estimate congestion levels using temporal features, while highlighting the importance of scalable infrastructure for large-scale mobility datasets. In future work, I may incorporate spatial features, extend modeling to multiyear data, or explore real-time streaming analysis.
+This proposed study is designed to demonstrate the value of using big data tools to analyze ride-hailing trip data to gain insight into congestion. It anticipates showing that simple predictive models can effectively estimate congestion levels using temporal features, while highlighting the importance of scalable infrastructure for large-scale datasets. In future work, I may incorporate spatial features, extend modeling to multiyear data, or explore real-time streaming analysis.
 
 \bibliographystyle{plain}
 \bibliography{refs}
