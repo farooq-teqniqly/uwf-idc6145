@@ -54,7 +54,7 @@ There remains a gap in the literature regarding sustained, full-year temporal an
 This project will follow a multiphase approach consistent with the big data lifecycle, including data acquisition, preprocessing, analysis, and modeling.
 
 \subsection{Data Acquisition and Setup}
-I plan to obtain the NYC TLC High-Volume FHV trip record data set for all 12 months of 2024. Each monthly dataset is stored in Parquet format and can be accessed via Google Drive in a cloud-based Google Colab environment. I will use Apache Spark (PySpark) for all data ingestion and transformation steps, given the dataset's scale of over 200 million records.
+I plan to obtain the NYC TLC High-Volume FHV trip record data set for all 12 months of 2024 \cite{dataset}. Each monthly dataset is stored in Parquet format and can be accessed via Google Drive in a cloud-based Google Colab environment. I will use Apache Spark (PySpark) for all data ingestion and transformation steps, given the dataset's scale of over 200 million records.
 
 \subsection{Data Processing}
 Data preprocessing plays a critical role in reducing both storage and compute requirements, resulting in not only time savings but also significant cost savings in a cloud-based environment. It also reduces the cognitive load on users by minimizing the number of columns they need to interpret and provides a standardized clean dataset that users can reliably use as the foundation for further analysis. By filtering out invalid records and outliers early in the pipeline, I can minimize the volume of data that needs to be processed in downstream stages, leading to more efficient use of Spark and storage resources.
